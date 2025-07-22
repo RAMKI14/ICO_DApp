@@ -251,7 +251,6 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
             </div>
           </div>
         )}
-
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <Link href="/" className="flex items-center group">
@@ -395,9 +394,18 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
             >
               {isDarkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
             </button>
+
+            <button
+              onClick={toggleMenu}
+              className={`focus:outline-none ${
+                isDarkMode ? "text-fuchsia-500" : "text-indigo-500"
+              }`}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
           </div>
         </div>
-
         {Object.keys(megaMenus).map((menuKey) => {
           const menu = megaMenus[menuKey];
 
@@ -481,8 +489,229 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
             </div>
           );
         })}
+        <div
+          className={`lg:hidden fixed inset-y-0 z-50 left-0 w-4/5 max-w-xs transform
+    transition-transform duration-300 ease-in-out ${
+      isOpen ? "translate-x-0" : "-translate-x-full"
+    }
+    ${
+      isDarkMode
+        ? "bg-[#14101A] border-r border-gray-800/50"
+        : "bg-white border-r border-gray-200/50"
+    }`}
+          style={{
+            height: "100vh",
+            overflow: "auto",
+          }}
+        >
+          <div className="h-full overflow-auto">
+            <div
+              className={`p-5 border-b ${
+                isDarkMode ? "border-gray-800/50" : "border-gray-200/50"
+              } flex justify-between items-center`}
+            >
+              <Link
+                href="/"
+                className="flex items-center"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="relative w-10 h-10 mr-3 overflow-hidden">
+                  <div className="absolute inset=0"></div>
+                  <div className="absolute inset=1 flex items-center justify-center">
+                    <img
+                      src="logo.png"
+                      alt="LOGO"
+                      className="w-6 h-6 object-contain"
+                    />
+                  </div>
+                </div>
+                <span className="text-2xl font-bold bg-clip-text text-transparent bg-fradient-to-r from-fuchsia-500 to-purple-600 animate-gradient-x">
+                  {TOKEN_NAME}
+                </span>
+              </Link>
+              <button
+                onClick={toggleMenu}
+                className={`focus:outline-none ${
+                  isDarkMode ? "text-fuchsia-500" : "text-purple-600"
+                }`}
+                aria-label="Close menu"
+              >
+                <FiX size={24} />
+              </button>
+            </div>
+
+            <div className="p-5">
+              <nav className="flex flex-col">
+                <MobileAccordionItem
+                  title={"Ecosystem"}
+                  isDarkMode={isDarkMode}
+                  items={[
+                    {
+                      icon: <FiActivity className="text-fuchsia-500" />,
+                      label: "Linktum AI",
+                      href: "#",
+                    },
+                    {
+                      icon: <FiCpu className="text-fuchsia-500" />,
+                      label: "AIVM",
+                      href: "#",
+                    },
+                    {
+                      icon: <FiLayers className="text-fuchsia-500" />,
+                      label: "Framework",
+                      href: "#",
+                    },
+                    {
+                      icon: <FiCompass className="text-fuchsia-500" />,
+                      label: "Explorer",
+                      href: "#",
+                    },
+                  ]}
+                  toggleMenu={toggleMenu}
+                />
+
+                <MobileAccordionItem
+                  title={"Resources"}
+                  isDarkMode={isDarkMode}
+                  items={[
+                    {
+                      icon: <FiFileText className="text-fuchsia-500" />,
+                      label: "Whitepaper",
+                      href: "#",
+                    },
+                    {
+                      icon: <FiMap className="text-fuchsia-500" />,
+                      label: "Import Token",
+                      href: "#",
+                    },
+                    {
+                      icon: <FiBook className="text-fuchsia-500" />,
+                      label: "Documentation",
+                      href: "#",
+                    },
+                    {
+                      icon: <FiDatabase className="text-fuchsia-500" />,
+                      label: "Analytics",
+                      href: "#",
+                    },
+                  ]}
+                  toggleMenu={toggleMenu}
+                />
+
+                <Link
+                  href={`${EXPLORER_ADDRESS_URL}${LINKTUM_ADDRESS}`}
+                  target="_blank"
+                  className={`flex items-center space-x-2 py-4 border-b ${
+                    isDarkMode
+                      ? "border-gray-800/50 text-gray-300 hover:text-fuchsia-500"
+                      : "border-gray-200/50 text-gray-700 hover:text-fuchsia-600"
+                  }`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FiCompass size={18} />
+                  <span>Explorer</span>
+                </Link>
+
+                <Link
+                  href={`/dashboard`}
+                  className={`flex items-center space-x-2 py-4 border-b ${
+                    isDarkMode
+                      ? "border-gray-800/50 text-gray-300 hover:text-fuchsia-500"
+                      : "border-gray-200/50 text-gray-700 hover:text-fuchsia-600"
+                  }`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FiInfo size={18} />
+                  <span>Dashboard</span>{" "}
+                </Link>
+                <div className="mt-8">
+                  <CustomConnectButton />
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+        {isOpen && (
+          <div
+            className="md:hidden fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300"
+            onClick={toggleMenu}
+          ></div>
+        )}
       </header>
+      <style jsx>
+        {`
+          @keyframes marquee {
+            0% {
+              transform: translateX(100%);
+            }
+            100%: {
+              transform: translateX(-100%);
+            }
+            .animate-marquee {
+              animation: marquee 20s linear infinite;
+              display: inline-block;
+            }
+          }
+        `}
+      </style>
     </>
+  );
+};
+
+const MobileAccordionItem = ({ title, items, isDarkMode, toggleMenu }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div
+      className={`border-b ${
+        isDarkMode ? "border-gray-800/50" : "border-gray-200/50"
+      }`}
+    >
+      <button
+        className={`flex items-center justify-between w-full py-4 ${
+          isDarkMode ? "text-gray-300" : "text-gray-700"
+        }`}
+        onClick={() => setIsOpen(!isOpen)}
+        type="button"
+        aria-expanded={isOpen}
+      >
+        <span className="flex items-center space-x-2">
+          <FiChevronDown
+            className={`transition-transform duration-300 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+          <span>{title}</span>
+        </span>
+      </button>
+      <div
+        className={`overflow-hidden transition-all duration-300 ${
+          isOpen ? "max-h-96" : "max-h-0"
+        }`}
+      >
+        <div className="pl-6 pb-2 space-y-2">
+          {items.map((item, index) => (
+            <Link
+              href={item.href}
+              key={index}
+              target="_blank"
+              className={`flex items-center space-x-2 py-3 ${
+                isDarkMode
+                  ? "text-gray-400 hover:text-fuchsia-500"
+                  : "text-gray-600 hover:text-teal-600"
+              } transition-colors`}
+              onClick={() => {
+                toggleMenu();
+                setIsOpen(false);
+              }}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
